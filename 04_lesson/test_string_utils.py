@@ -300,6 +300,3 @@ class TestStringUtils:
 if __name__ == "__main__":
     # Можно запускать тесты без pytest: python test_string_utils.py
     pytest.main(["-v", "test_string_utils.py"])
-
-
-

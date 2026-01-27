@@ -38,8 +38,8 @@ class CalculatorPage:
         """Нажать кнопку ="""
         self.driver.find_element(*self.button_equals).click()
 
-    def get_result_with_explicit_wait(self):
-        """Получить результат с ожиданием 45 секунд"""
-        import time
-        time.sleep(45)
+    def wait_and_get_result(self):
+        self.wait.until(
+        EC.text_to_be_present_in_element(self.result_screen, "15")
+    )
         return self.driver.find_element(*self.result_screen).text

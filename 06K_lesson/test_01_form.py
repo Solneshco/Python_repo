@@ -13,71 +13,44 @@ def browser():
     driver.quit()
 
 
-def test_form_validation(browser):
+def test_01_form(browser):
     browser.get("https://bonigarcia.dev/selenium-webdriver-java/data-types.html")
-    
-    first_name = browser.find_element(By.CSS_SELECTOR, 'input[name="first-name"]')
-    first_name.send_keys("Иван")
 
-    last_name = browser.find_element(By.CSS_SELECTOR, 'input[name="last-name"]')
-    last_name.send_keys("Петров")
+    browser.find_element(By.NAME, "first-name").send_keys("Иван")
+    browser.find_element(By.NAME, "last-name").send_keys("Петров")
+    browser.find_element(By.NAME, "address").send_keys("Ленина, 55-3")
+    browser.find_element(By.NAME, "e-mail").send_keys("test@skypro.com")
+    browser.find_element(By.NAME, "phone").send_keys("+7985899998787")
+    browser.find_element(By.NAME, "city").send_keys("Москва")
+    browser.find_element(By.NAME, "country").send_keys("Россия")
+    browser.find_element(By.NAME, "job-position").send_keys("QA")
+    browser.find_element(By.NAME, "company").send_keys("SkyPro")
 
-    address = browser.find_element(By.CSS_SELECTOR, 'input[name="address"]')
-    address.send_keys("Ленина, 55-3")
-
-    email = browser.find_element(By.CSS_SELECTOR, 'input[name="e-mail"]')
-    email.send_keys("test@skypro.com")
-
-    phone = browser.find_element(By.CSS_SELECTOR, 'input[name="phone"]')
-    phone.send_keys("+7985899998787")
-    
-
-    city = browser.find_element(By.CSS_SELECTOR, 'input[name="city"]')
-    city.send_keys("Москва")
-
-    country = browser.find_element(By.CSS_SELECTOR, 'input[name="country"]')
-    country.send_keys("Россия")
-
-    job_position = browser.find_element(By.CSS_SELECTOR, 'input[name="job-position"]')
-    job_position.send_keys("QA")
-
-    company = browser.find_element(By.CSS_SELECTOR, 'input[name="company"]')
-    company.send_keys("SkyPro")
-    
-    submit_button = browser.find_element(By.CSS_SELECTOR, 'button[type="submit"]')
-    submit_button.click()
+    submit = browser.find_element(By.CSS_SELECTOR, "button[type='submit']")
+    browser.execute_script("arguments[0].scrollIntoView();", submit)
+    submit.click()
 
     wait = WebDriverWait(browser, 10)
 
-    zip_code_field = wait.until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, 'input[name="zip-code"]'))
-    )
+    # Zip code — красный
+    zip_code = wait.until(EC.presence_of_element_located((By.ID, "zip-code")))
+    assert "alert-danger" in zip_code.get_attribute("class"), \
+        "Поле Zip code должно быть подсвечено красным"
 
-    zip_code_classes = zip_code_field.get_attribute("class")
-
-    assert "is-invalid" in zip_code_classes, "Поле Zip code должно быть подсвечено красным"
-
+    # Остальные поля — зелёные
     fields_to_check = [
-        'first-name',
-        'last-name',
-        'address',
-        'e-mail',
-        'phone',
-        'city',
-        'country',
-        'job-position',
-        'company'
+        "first-name",
+        "last-name",
+        "address",
+        "city",
+        "country",
+        "e-mail",
+        "phone",
+        "job-position",
+        "company"
     ]
-    
-    for field_name in fields_to_check:
-        field = browser.find_element(By.CSS_SELECTOR, f'input[name="{field_name}"]')
-        field_classes = field.get_attribute("class")
-        
 
-        assert "is-valid" in field_classes, f"Поле {field_name} должно быть подсвечено зеленым"
-    
-    print("Все проверки пройдены успешно!")
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
+    for field_id in fields_to_check:
+        field = browser.find_element(By.ID, field_id)
+        assert "alert-success" in field.get_attribute("class"), \
+            f"Поле {field_id} должно быть подсвечено зелёным"

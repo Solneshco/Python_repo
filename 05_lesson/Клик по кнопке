@@ -1,0 +1,29 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+driver = webdriver.Chrome()
+
+try:
+    driver.get("http://uitestingplayground.com/classattr")
+
+    blue_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CLASS_NAME, "btn-primary"))
+    )
+
+    blue_button.click()
+
+    try:
+        WebDriverWait(driver, 3).until(EC.alert_is_present())
+        alert = driver.switch_to.alert
+        alert.accept()
+        print("Всплывающее окно успешно закрыто")
+    except:
+        pass
+    
+    print("Скрипт успешно выполнен!")
+    
+finally:
+    driver.implicitly_wait(2)
+    driver.quit()

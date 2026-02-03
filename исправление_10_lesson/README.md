@@ -1,0 +1,1 @@
+Проект автоматизации тестирования интернет-магазина Sauce Demo с использованием Selenium, Page Object Pattern и Allure для отчетности.
